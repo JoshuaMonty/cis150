@@ -1,3 +1,4 @@
+#!/bin/bash
 PS3='Please make a selection:'
 options=("Editing Commands" "Games" “Chess” “Checkers” "User Administration" "Process Commands" "System Commands" "Network Commands")
 select opt in "${options[@]}"
