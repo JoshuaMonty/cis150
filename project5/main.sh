@@ -1,5 +1,6 @@
 #!/bin/bash
-PS3='Please make a selection:'
+# List of Unix system commands made by Joshua Montgomery
+PS3='Please make a selection: '
 main() {
 	tput reset
 	options=("Editing Commands" "Games" "User Administration" "Process Commands" "System Commands" "Network Commands" "Exit")
@@ -18,8 +19,10 @@ main() {
             	processcmds
             	;;
         "${options[4]}")
+		systemcommands
 		;;
         "${options[5]}")
+		networkcommands
 		;;
 	"${options[6]}")
 		exit 0
@@ -54,6 +57,14 @@ processcmds() {
 		processcmds
 		;;
 	"${options[2]}")
+		read -p "pid: " pid
+# Pipes pid into grep the flag P enables PCRE which stands for Perl Compatible Regular Expression
+# /d represent 0-9 and won't accept any other characters. The plus sign allows more tha one digit to be entered
+# The carret and dollar sign make it so the input is strictly numbers.
+		if [ "`echo $pid | grep -P -e "^\d+$" -c`" == "0" ]; then
+		echo "Invalid pid"
+		fi
+		kill $pid
 		;;
 	"${options[3]}")
 		main
@@ -63,9 +74,39 @@ processcmds() {
 	done
 }
 systemcommands() {
-	echo ""
+	options=("Shutdown" "Restart" "Return to Main")
+	select opt in "${options[@]}"
+	do
+	case $opt in
+	"${options[0]}")
+		shutdown -h 0
+		systemcommands
+		;;
+	"${options[1]}")
+		shutdown -r 0
+		systemcommands
+		;;
+	"${options[2]}")
+		main
+		;;
+	*) echo invalid option;;
+	esac
+	done
 }
 networkcommands() {
-	echo ""
+	options=("IP Configuration" "Return to Main")
+	select opt in "${options[@]}"
+	do
+	case $opt in
+	"${options[0]}")
+		ifconfig
+		networkcommands
+		;;
+	"${options[1]}")
+		main
+		;;
+	*) echo invalid option;;
+	esac
+	done
 }
 main
