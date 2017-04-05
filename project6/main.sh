@@ -8,11 +8,12 @@ declare -a ages
 declare -a people
 
 main() {
-    readFile
-    altReadFile
-    printLastNames
-    printMdArray
-    writeNewFile
+   # readFile
+   # altReadFile
+    readin
+   # printLastNames
+   # printMdArray
+   # writeNewFile
     exit 0
 }
 
@@ -50,6 +51,18 @@ altReadFile() {
 	done < $inFile
 }
 
+readin() {
+	declare -i i=0
+	while read lastName firstName age
+	do
+		people[$i,0]=$lastName
+		people[$i,1]=$firstName
+		people[$i,2]=$age
+	echo "$i $lastName $firstName $age"
+		(( i++ ))
+	done
+}
+	
 printLastNames() {
     for (( i=0; i < ${#lastNames[@]}; i++ ))
     do
