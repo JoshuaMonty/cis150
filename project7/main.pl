@@ -1,11 +1,12 @@
+#!/usr/bin/perl
 use 5.14.2;
 use warnings;
 
 my ($LastName, $FirstName, $MiddleName, $DOB, $Insurance, $Ailment);
-my ($age, $PIN);
+my ($age, $PIN, $continue, $counter);
 
 sub main {
-	system ("cls");
+	# system ("clear");
 	setLastName();
 	setFirstName();
 	setMiddleName();
@@ -75,7 +76,7 @@ sub setFirstName {
 
 sub setMiddleName {
 	if (!(defined $MiddleName)) {
-		MiddleName = 1;
+		$MiddleName = 1;
 	}
 	while ($MiddleName !~ /^[a-zA-Z]{2,20}$/x) {
 		say "What is your middle name?";
@@ -90,12 +91,13 @@ sub setMiddleName {
 
 sub setDOB {
 	if (!(defined $DOB)) {
-		DOB = 1;
+		$DOB = 1;
 	}
-	while ($DOB !~ /^[a-zA-Z]{2,20}$/x) {
-		say "What is your DOB?";
+	my ($pattern) = /^[01]?\d\/[0-3]?\d\/\d{4}\$/;
+	while ($DOB !~ $pattern) {
+		say "What is your DOB? (MM/DD/YYYY)";
 		chomp ($DOB = <STDIN>);
-		if ($DOB !~ /^[a-zA-Z]{2,20}$/x) {
+		if ($DOB !~ $pattern) {
 			say "Incorrect input. Please try again";
 			sleep 1;
 			system ("cls");
@@ -105,7 +107,7 @@ sub setDOB {
 
 sub setInsurance {
 	if (!(defined $Insurance)) {
-		Insurance = 1;
+		$Insurance = 1;
 	}
 	while ($Insurance !~ /^[a-zA-Z]{2,20}$/x) {
 		say "What is your Insurance Plan?";
@@ -120,7 +122,7 @@ sub setInsurance {
 
 sub setAilment {
 	if (!(defined $Ailment)) {
-		Ailment = 1;
+		$Ailment = 1;
 	}
 	while ($Ailment !~ /^[a-zA-Z]{2,20}$/x) {
 		say "What is your Ailment?";
@@ -147,7 +149,7 @@ sub age {
     return $age;
 }
 
-if $Insurance = undef {
+if ($Insurance = undef) {
 	print_variable ($LastName);
 	print_variable ($FirstName);
 	print_variable ($MiddleName);
