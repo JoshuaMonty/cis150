@@ -93,11 +93,11 @@ sub setDOB {
 	if (!(defined $DOB)) {
 		$DOB = 1;
 	}
-	my ($pattern) = /^[01]?\d\/[0-3]?\d\/\d{4}\$/;
-	while ($DOB !~ $pattern) {
+	my ($pattern) = "^[01]?\\d\/[0-3]?\\d\/\\d{4}\$";
+	while ($DOB !~ /$pattern/) {
 		say "What is your DOB? (MM/DD/YYYY)";
 		chomp ($DOB = <STDIN>);
-		if ($DOB !~ $pattern) {
+		if ($DOB !~ /$pattern/) {
 			say "Incorrect input. Please try again";
 			sleep 1;
 			system ("cls");
