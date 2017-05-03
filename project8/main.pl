@@ -1,74 +1,42 @@
+#!/usr/bin/perl
+#usage:main.pl username filename.zip path
 use warnings;
+use String::Util 'trim';
 
 my (@data, @user);
-my ($DATAFILEIN, $DATAFILEOUT);
+my ($username, $zipfile, $path, $files);
 use constant COLUMNS => 6;
 
 sub main {
-	setDataFileIn();
-	setDataFileOut();
-	readData();
-	writeData();
-deleteData();
-printUser();
-deleteUser();
-printDataFileOut();
+	parseargs();
+	findfiles();
+	zipfiles();
 }
 
 main();
 
-sub setDataFileIn {
-	$DATAFILEIN = $ARGV[0];
+sub parseargs {
+	$username = trim ($ARGV[0]?$ARGV[0]:`whoami`);
+	$zipfile = $ARGV[1]?$ARGV[1]:"$username.tar.gz";
+	$path = $ARGV[2]?$ARGV[2]:"./";
+	#print "$username, $zipfile, $path";
 }
 
-sub setDataFileOut {
-	if (!($ARGV[1])) {
-		$DATAFILEOUT = "./DATAX.ZIP";
-	} else {
-		$DATAFILEOUT = $ARGV[1];
+sub findfiles {
+	$files = `find $path -user $username`;
+	print "Archiving:\n$files\n";
+}
+
+sub zipfiles {
+	$files =~ s/\n/ \\\n/g;
+	my $cmd = "tar -czf $zipfile $files";
+	#print $cmd;
+	if (system ($cmd)==0)
+	{
+		print "Created $zipfile";
+	}
+	else
+	{
+		print "Something failed";
 	}
 }
-
-sub readData {
-	my $IN;
-	my $counter = 0;
-	my @tempData = ();
-	@data = ();
-	open ($IN, '<', $DATAFILEIN);
-	while (<$IN>) {
-		@tempData = split(/,/);
-		for (my $i = 0; $i < COLUMNS; $i++) {
-			chomp ($data[$counter][$i] = $tempData[$i]);
-		}
-		$counter++;
-	}
-	close $IN;
-}
-
-sub writeData {
-	my $OUT;
-	my $size = @data;
-	open ($OUT, '>', $DATAFILEOUT);
-	for (my $i = 0; $i < $size; $i++) {
-		for (my $j = 0; $j < COLUMNS; $j++) {
-			if ($j == COLUMNS - 1) {
-				print ($OUT "$data[$i][$j]");
-			} else {
-				print ($OUT "$data[$i][$j],");
-			}
-		}
-		print ($OUT "\n");
-	}
-	close $OUT;
-}
-
-sub printDatafileout {
-	my $size = @data;
-	for (my $i = 0; $i < $size; $i++) {
-		for (my $j = 0; $j < COLUMNS; $j++) {
-			print "$Datafileout[$i][$j] ";
-		}
-		print "\n";
-	}
-}
-
